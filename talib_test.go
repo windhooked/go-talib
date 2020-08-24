@@ -127,7 +127,11 @@ print(' '.join([str(p) for p in result]).replace('nan','0.0'))`,
 
 // Ensure that python and talib are installed and in the PATH
 func TestMain(m *testing.M) {
-	pyout, _ := exec.Command("python", "-c", "import talib; print('success')").Output()
+	pyout, err := exec.Command("python", "-c", "import talib; print('success')").Output()
+	if err != nil {
+		fmt.Printf("python and talib must be installed to run tests %v", err)
+		os.Exit(-1)
+	}
 	if string(pyout[0:7]) != "success" {
 		fmt.Println("python and talib must be installed to run tests")
 		os.Exit(-1)
